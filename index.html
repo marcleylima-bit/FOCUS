@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0b1020">
+  <meta name="description" content="FOCUS — organize matérias, atividades e sua rotina acadêmica.">
+  <title>FOCUS | Organizador Acadêmico</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <script type="module" src="js/app.js"></script>
+</head>
+<body>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <main id="auth-screen" class="auth-screen">
+    <section class="auth-card">
+      <div class="brand-mark">F</div>
+      <div class="brand-name">FOCUS</div>
+      <p class="auth-subtitle">Seu aprendizado, organizado.</p>
+      <div class="auth-tabs">
+        <button id="login-tab" class="auth-tab active" type="button">Entrar</button>
+        <button id="signup-tab" class="auth-tab" type="button">Criar conta</button>
+      </div>
+      <form id="auth-form">
+        <label for="auth-email">E-mail</label>
+        <input id="auth-email" type="email" autocomplete="email" placeholder="voce@email.com" required>
+        <label for="auth-password">Senha</label>
+        <input id="auth-password" type="password" autocomplete="current-password" minlength="6" placeholder="Mínimo de 6 caracteres" required>
+        <button id="auth-submit" class="btn btn-primary btn-full" type="submit">Entrar na plataforma</button>
+      </form>
+      <p id="auth-feedback" class="form-feedback" aria-live="polite"></p>
+      <p class="auth-footnote">Seus dados ficam associados à sua conta.</p>
+    </section>
+  </main>
+
+  <div id="app-screen" class="app-shell hidden">
+    <aside class="sidebar">
+      <a class="brand" href="#dashboard" aria-label="FOCUS início">
+        <span class="brand-mark small">F</span>
+        <span><strong>FOCUS</strong><small>ACADEMIC ORGANIZER</small></span>
+      </a>
+      <div class="nav-label">ESPAÇO DE ESTUDO</div>
+      <nav class="main-nav">
+        <button class="nav-link active" data-view="dashboard"><span class="nav-icon">⌂</span>Visão geral</button>
+        <button class="nav-link" data-view="subjects"><span class="nav-icon">▤</span>Matérias</button>
+        <button class="nav-link" data-view="tasks"><span class="nav-icon">✓</span>Atividades</button>
+        <button class="nav-link" data-view="notes"><span class="nav-icon">▧</span>Resumos</button>
+        <button class="nav-link" data-view="calendar"><span class="nav-icon">▦</span>Calendário</button>
+        <button class="nav-link" data-view="focus"><span class="nav-icon">◷</span>Pomodoro</button>
+        <button class="nav-link" data-view="grades"><span class="nav-icon">★</span>Notas</button>
+        <button class="nav-link" data-view="reports"><span class="nav-icon">↗</span>Relatórios</button>
+        <button class="nav-link" data-view="profile"><span class="nav-icon">◎</span>Perfil</button>
+      </nav>
+      <div class="sidebar-bottom">
+        <div class="profile-mini">
+          <div class="avatar" id="user-avatar">F</div>
+          <div class="profile-info"><strong id="user-email">Estudante</strong><small>Minha conta</small></div>
+        </div>
+        <button id="logout-button" class="logout-button">↪ <span>Sair da conta</span></button>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <div class="mobile-brand"><span class="brand-mark small">F</span><strong>FOCUS</strong></div>
+        <div class="topbar-right">
+          <span class="online-dot"></span><span class="online-label">Dados sincronizados</span>
+        </div>
+      </header>
+
+      <section id="view-dashboard" class="view">
+        <div class="page-heading">
+          <div><p class="eyebrow" id="today-label">SEU ESPAÇO ACADÊMICO</p><h1>Visão geral</h1><p class="page-description">Um passo de cada vez. Mantenha seus estudos em movimento.</p></div>
+          <button class="btn btn-primary" data-action="new-task">＋ Nova atividade</button>
+        </div>
+        <div id="reminder-box"></div>
+        <div class="stat-grid">
+          <article class="stat-card"><div class="stat-top"><span>Matérias</span><span class="stat-icon violet">▤</span></div><strong id="stat-subjects">0</strong><small>Disciplinas cadastradas</small></article>
+          <article class="stat-card"><div class="stat-top"><span>Atividades abertas</span><span class="stat-icon blue">◷</span></div><strong id="stat-open">0</strong><small>Precisam da sua atenção</small></article>
+          <article class="stat-card"><div class="stat-top"><span>Concluídas</span><span class="stat-icon green">✓</span></div><strong id="stat-done">0</strong><small>Atividades finalizadas</small></article>
+          <article class="stat-card"><div class="stat-top"><span>Progresso</span><span class="stat-icon orange">↗</span></div><strong id="stat-progress">0%</strong><small>Do total de atividades</small></article>
+        </div>
+        <div class="dashboard-grid">
+          <section class="panel">
+            <div class="panel-heading"><div><h2>Próximas atividades</h2><p>O que vem pela frente.</p></div><button class="text-link" data-view="tasks">Ver todas →</button></div>
+            <div id="dashboard-tasks" class="task-list"><div class="empty-state">Carregando atividades...</div></div>
+          </section>
+          <section class="panel">
+            <div class="panel-heading"><div><h2>Suas matérias</h2><p>Disciplinas em andamento.</p></div><button class="text-link" data-view="subjects">Ver todas →</button></div>
+            <div id="dashboard-subjects" class="subject-list"><div class="empty-state">Carregando matérias...</div></div>
+          </section>
+        </div>
+      </section>
+
+      <section id="view-subjects" class="view hidden">
+        <div class="page-heading"><div><p class="eyebrow">ORGANIZE SEU CONTEÚDO</p><h1>Matérias</h1><p class="page-description">Cadastre e acompanhe suas disciplinas.</p></div></div>
+        <section class="panel">
+          <div class="panel-heading"><div><h2>Adicionar matéria</h2><p>Inclua uma disciplina no seu espaço de estudos.</p></div></div>
+          <form id="subject-form" class="inline-form">
+            <input id="subject-name" type="text" maxlength="80" placeholder="Ex.: Programação Orientada a Objetos" required>
+            <input id="subject-description" type="text" maxlength="180" placeholder="Descrição (opcional)">
+            <button class="btn btn-primary" type="submit">＋ Adicionar</button>
+          </form>
+        </section>
+        <section class="panel section-panel"><div class="panel-heading"><div><h2>Minhas disciplinas</h2><p id="subject-total-label">0 matérias</p></div></div><div id="subjects-list" class="subject-cards"></div></section>
+      </section>
+
+      <section id="view-tasks" class="view hidden">
+        <div class="page-heading"><div><p class="eyebrow">PRAZOS E ENTREGAS</p><h1>Atividades</h1><p class="page-description">Acompanhe trabalhos, provas e tarefas.</p></div></div>
+        <section class="panel">
+          <div class="panel-heading"><div><h2>Nova atividade</h2><p>Registre o que precisa ser feito.</p></div></div>
+          <form id="task-form" class="task-form">
+            <input id="task-title" type="text" maxlength="120" placeholder="Nome da atividade" required>
+            <div class="form-row">
+              <select id="task-subject"><option value="">Sem matéria vinculada</option></select>
+              <input id="task-date" type="date" aria-label="Data de entrega">
+              <select id="task-priority"><option value="Normal">Prioridade normal</option><option value="Alta">Prioridade alta</option><option value="Baixa">Prioridade baixa</option></select>
+            </div>
+            <textarea id="task-description" rows="2" maxlength="500" placeholder="Descrição ou observações (opcional)"></textarea>
+            <button class="btn btn-primary" type="submit">＋ Salvar atividade</button>
+          </form>
+        </section>
+        <section class="panel section-panel">
+          <div class="panel-heading"><div><h2>Todas as atividades</h2><p>Atualize o andamento conforme concluir.</p></div><select id="task-filter" class="filter-select"><option value="Todas">Todas</option><option value="Pendente">Pendentes</option><option value="Em andamento">Em andamento</option><option value="Concluída">Concluídas</option></select></div>
+          <div id="tasks-list" class="task-list"></div>
+        </section>
+      </section>
+
+      <section id="view-notes" class="view hidden">
+        <div class="page-heading"><div><p class="eyebrow">IDEIAS E APRENDIZADO</p><h1>Anotações</h1><p class="page-description">Guarde explicações, lembretes e pontos importantes.</p></div></div>
+        <section class="panel">
+          <div class="panel-heading"><div><h2>Nova anotação</h2><p>Registre o que você não quer esquecer.</p></div></div>
+          <form id="note-form" class="task-form">
+            <input id="note-title" type="text" maxlength="120" placeholder="Título da anotação" required>
+            <select id="note-subject"><option value="">Sem matéria vinculada</option></select>
+            <div class="form-row"><input id="note-topic" maxlength="120" placeholder="Tema para mini resumo (ex.: Termodinâmica)"><button id="note-autosummary" class="btn btn-secondary" type="button">✨ Gerar mini resumo</button></div>
+            <textarea id="note-content" rows="5" maxlength="10000" placeholder="Escreva sua anotação..." required></textarea>
+            <button class="btn btn-primary" type="submit">＋ Salvar anotação</button>
+          </form>
+        </section>
+        <section class="panel section-panel"><div class="panel-heading"><div><h2>Anotações salvas</h2><p>Conteúdo particular da sua conta.</p></div></div><div id="notes-list" class="note-grid"></div></section>
+      </section>
+
+      <section id="view-calendar" class="view hidden">
+        <div class="page-heading"><div><p class="eyebrow">DATAS IMPORTANTES</p><h1>Calendário acadêmico</h1><p class="page-description">Organize provas, aulas, trabalhos e compromissos.</p></div></div>
+        <section class="panel">
+          <div class="panel-heading"><div><h2>Novo evento</h2><p>Adicione uma data importante à sua agenda.</p></div></div>
+          <form id="event-form" class="form-row">
+            <input id="event-title" placeholder="Nome do evento" maxlength="120" required>
+            <input id="event-date" type="date" required aria-label="Data do evento">
+            <select id="event-type"><option>Aula</option><option>Prova</option><option>Simulado</option><option>Trabalho</option><option>Compromisso</option><option>Outro</option></select>
+            <select id="event-remind" aria-label="Lembrete"><option value="1">Lembrar 1 dia antes</option><option value="0">Lembrar no dia</option><option value="3">Lembrar 3 dias antes</option><option value="7">Lembrar 7 dias antes</option></select><button class="btn btn-primary" type="submit">＋ Adicionar evento</button>
+          </form>
+        </section>
+        <section class="panel">
+          <div class="panel-heading"><div><h2>Importar calendário</h2><p>Envie um arquivo .ics (Google Agenda, Outlook ou portal da faculdade). Você escolhe o que entra.</p></div></div>
+          <div class="form-row">
+            <input id="ics-file" type="file" accept=".ics,text/calendar">
+            <select id="ics-filter-type"><option value="">Todos os tipos</option><option>Prova</option><option>Simulado</option><option>Trabalho</option><option>Aula</option><option>Compromisso</option></select>
+            <select id="ics-remind"><option value="1">Lembrar 1 dia antes</option><option value="0">Lembrar no dia</option><option value="3">Lembrar 3 dias antes</option><option value="7">Lembrar 7 dias antes</option></select>
+          </div>
+          <label class="field-hint"><input type="checkbox" id="ics-future" checked> Mostrar só eventos a partir de hoje</label>
+          <div id="ics-preview" class="task-list"></div>
+          <div class="form-row"><button id="ics-import" class="btn btn-primary hidden" type="button">Importar selecionados</button><button id="notify-enable" class="btn btn-secondary" type="button">🔔 Ativar notificações do navegador</button></div>
+        </section>
+        <section class="panel section-panel">
+          <div class="panel-heading"><div><h2>Próximos eventos</h2><p>Eventos cadastrados na sua conta.</p></div></div>
+          <div id="events-list" class="task-list"></div>
+        </section>
+      </section>
+
+      <section id="view-focus" class="view hidden">
+        <div class="page-heading"><div><p class="eyebrow">SEU TEMPO DE CONCENTRAÇÃO</p><h1>Modo foco</h1><p class="page-description">Faça uma sessão de cada vez e respeite suas pausas.</p></div></div>
+        <section class="panel pomodoro-panel">
+          <div class="pomodoro-mode">
+            <button class="mode-button active" data-minutes="25" data-mode="Foco">Foco · 25 min</button>
+            <button class="mode-button" data-minutes="5" data-mode="Pausa curta">Pausa curta · 5 min</button>
+            <button class="mode-button" data-minutes="15" data-mode="Pausa longa">Pausa longa · 15 min</button>
+          </div>
+          <div id="pomodoro-clock" class="pomodoro-clock">25:00</div>
+          <p id="pomodoro-label" class="page-description">Hora de concentrar.</p>
+          <div class="pomodoro-actions"><button id="timer-start" class="btn btn-primary">Iniciar foco</button><button id="timer-reset" class="btn btn-secondary">Reiniciar</button></div>
+          <p class="pomodoro-hint">As sessões concluídas são registradas no seu histórico.</p>
+        </section>
+        <section class="panel section-panel"><div class="panel-heading"><div><h2>Histórico de sessões</h2><p>Seus ciclos de foco concluídos.</p></div></div><div id="focus-history" class="task-list"></div></section>
+      </section>
+
+      <section id="view-grades" class="view hidden">
+        <div class="page-heading"><div><p class="eyebrow">ACOMPANHAMENTO ACADÊMICO</p><h1>Calculadora de notas</h1><p class="page-description">Registre avaliações e acompanhe suas médias.</p></div></div>
+        <section class="panel">
+          <div class="panel-heading"><div><h2>Método de cálculo da faculdade</h2><p>Anote como sua instituição calcula a média e configure o cálculo automático.</p></div></div>
+          <form id="method-form" class="task-form">
+            <label for="method-subject">Vale para</label>
+            <select id="method-subject"><option value="">Todas as matérias (regra geral)</option></select>
+            <label for="method-notes">Regra da faculdade (suas anotações)</label>
+            <textarea id="method-notes" rows="3" maxlength="1000" placeholder="Ex.: Média = (AV1 + AV2) / 2. Abaixo de 7, faz prova final e a média passa a ser (média + final) / 2."></textarea>
+            <h3 class="profile-section-title">Método de cálculo das notas</h3>
+            <label for="profile-calculation-method">Como deseja calcular as médias?</label>
+            <select id="profile-calculation-method">
+              <option value="weighted">Média ponderada por avaliação</option>
+              <option value="arithmetic">Média aritmética simples</option>
+              <option value="sum">Soma de pontos</option>
+              <option value="category">Pesos por categoria</option>
+              <option value="custom">Fórmula personalizada</option>
+            </select>
+            <label for="profile-default-weights">Sequência de pesos padrão (%)</label><input id="profile-default-weights" placeholder="15, 15, 70" required><small class="field-hint">Usada como sugestão no método ponderado. Exemplo: 15, 15, 70.</small>
+            <label for="profile-category-weights">Pesos por categoria (%)</label><input id="profile-category-weights" placeholder="Prova: 70, Trabalho: 30"><small class="field-hint">No método por categoria, informe Categoria: peso, separando itens por vírgula. A soma deve ser 100. Exemplo: Prova: 70, Trabalho: 30.</small>
+            <label for="profile-custom-formula">Fórmula personalizada</label><input id="profile-custom-formula" placeholder="(N1 * 0.2) + (N2 * 0.3) + (N3 * 0.5)"><small class="field-hint">Use N1, N2, N3... na ordem em que as avaliações foram cadastradas. Permitidos: números, +, -, *, / e parênteses. Não use funções ou código.</small>
+            <button class="btn btn-primary" type="submit">Salvar método de cálculo</button>
+          </form>
+        </section>
+        <section class="panel">
+          <div class="panel-heading"><div><h2>Adicionar avaliação</h2><p>Informe a matéria, a avaliação e a nota obtida.</p></div></div>
+          <form id="grade-form" class="form-row">
+            <select id="grade-subject" required><option value="">Selecione uma matéria</option></select>
+            <input id="grade-title" placeholder="Ex.: Prova 1" maxlength="100" required>
+            <input id="grade-category" placeholder="Categoria (ex.: Prova, Trabalho)" maxlength="60">
+            <input id="grade-value" type="number" min="0" max="100" step="0.01" placeholder="Nota (0 a 100)" required>
+            <input id="grade-weight" type="number" min="0.01" max="100" step="0.01" value="15" placeholder="Peso (%)" aria-label="Peso da avaliação em porcentagem" required>
+            <button class="btn btn-primary" type="submit">＋ Salvar avaliação</button>
+          </form>
+          <p id="grade-method-hint" class="pomodoro-hint">O método de cálculo é definido no Perfil. Você pode usar pesos diferentes por avaliação ou por categoria.</p>
+        </section>
+        <section class="panel section-panel"><div class="panel-heading"><div><h2>Minhas médias</h2><p>Notas registradas por disciplina.</p></div></div><div id="grades-list" class="task-list"></div></section>
+      </section>
+
+      <section id="view-reports" class="view hidden">
+        <div class="page-heading"><div><p class="eyebrow">SUA EVOLUÇÃO</p><h1>Relatórios</h1><p class="page-description">Uma visão geral do que você já realizou no FOCUS.</p></div></div>
+        <div class="stat-grid">
+          <article class="stat-card"><div class="stat-top"><span>Horas de foco</span><span class="stat-icon violet">◷</span></div><strong id="report-hours">0h</strong><small>Tempo registrado em sessões</small></article>
+          <article class="stat-card"><div class="stat-top"><span>Sessões concluídas</span><span class="stat-icon blue">✓</span></div><strong id="report-sessions">0</strong><small>Ciclos de foco finalizados</small></article>
+          <article class="stat-card"><div class="stat-top"><span>Atividades concluídas</span><span class="stat-icon green">↗</span></div><strong id="report-tasks">0</strong><small>Entregas finalizadas</small></article>
+          <article class="stat-card"><div class="stat-top"><span>Resumos salvos</span><span class="stat-icon orange">▧</span></div><strong id="report-notes">0</strong><small>Anotações na sua biblioteca</small></article>
+        </div>
+        <section class="panel"><div class="panel-heading"><div><h2>Progresso das atividades</h2><p>Percentual de tarefas concluídas.</p></div></div><div class="progress-track"><div id="report-progress-bar" class="progress-fill"></div></div><p id="report-progress-label" class="pomodoro-hint">0% concluído</p></section>
+      </section>
+
+      <section id="view-profile" class="view hidden">
+        <div class="page-heading"><div><p class="eyebrow">CONFIGURAÇÕES</p><h1>Meu perfil</h1><p class="page-description">Informações da sua conta FOCUS.</p></div></div>
+        <section class="panel profile-panel">
+          <div class="profile-large"><div class="avatar large" id="profile-avatar">F</div><div><h2 id="profile-email">Estudante</h2><p class="page-description">Conta pessoal FOCUS · desde <span id="profile-created">—</span></p></div></div>
+          <form id="profile-form" class="task-form">
+            <h3>Dados pessoais</h3>
+            <label for="profile-name">Nome de exibição</label><input id="profile-name" maxlength="100" placeholder="Como deseja ser chamado?">
+            <div class="form-row"><div><label for="profile-course">Curso</label><input id="profile-course" maxlength="100" placeholder="Ex.: Análise e Desenvolvimento de Sistemas"></div><div><label for="profile-institution">Instituição</label><input id="profile-institution" maxlength="120" placeholder="Nome da instituição"></div></div>
+            <h3 class="profile-section-title">Preferências acadêmicas</h3>
+            <div class="form-row"><div><label for="profile-min-grade">Nota mínima para aprovação</label><input id="profile-min-grade" type="number" min="0" max="100" step="0.1" required></div><div><label for="profile-scale">Escala de notas</label><input id="profile-scale" value="0 a 100 pontos" readonly></div><div><label for="profile-theme">Aparência</label><select id="profile-theme"><option value="dark">Tema escuro</option><option value="light">Tema claro</option></select></div></div>
+            <button class="btn btn-primary" type="submit">Salvar perfil e preferências</button>
+          </form>
+          <div class="profile-divider"></div>
+          <form id="password-form" class="task-form"><h3>Segurança</h3><label for="new-password">Nova senha</label><input id="new-password" type="password" minlength="8" autocomplete="new-password" placeholder="Mínimo de 8 caracteres" required><button class="btn btn-secondary" type="submit">Atualizar senha</button></form>
+          <div class="security-actions"><button id="signout-all-button" class="btn btn-secondary" type="button">Encerrar sessões em todos os dispositivos</button></div>
+          <div class="danger-zone"><h3>Zona de exclusão</h3><p>Excluir sua conta remove permanentemente seus dados acadêmicos associados. Essa ação não pode ser desfeita.</p><button id="delete-account-button" class="btn btn-danger" type="button">Excluir minha conta e meus dados</button><small class="field-hint">A exclusão exige a implantação da função segura descrita no README.</small></div>
+        </section>
+      </section>
+
+      <footer class="footer">FOCUS <span>•</span> Estude com propósito. Evolua com foco.</footer>
+    </main>
+  </div>
+
+  <dialog id="edit-task-dialog" class="dialog">
+    <form id="edit-task-form" method="dialog">
+      <div class="panel-heading"><div><h2>Editar atividade</h2><p>Atualize as informações.</p></div><button type="button" class="icon-button" id="close-dialog" aria-label="Fechar">×</button></div>
+      <input type="hidden" id="edit-task-id">
+      <label for="edit-task-title">Título</label><input id="edit-task-title" required maxlength="120">
+      <label for="edit-task-status">Status</label><select id="edit-task-status"><option>Pendente</option><option>Em andamento</option><option>Concluída</option></select>
+      <label for="edit-task-date">Data de entrega</label><input id="edit-task-date" type="date">
+      <div class="dialog-actions"><button type="button" class="btn btn-secondary" id="cancel-dialog">Cancelar</button><button type="submit" class="btn btn-primary">Salvar alterações</button></div>
+    </form>
+  </dialog>
+</body>
+</html>
